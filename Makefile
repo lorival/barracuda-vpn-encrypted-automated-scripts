@@ -41,6 +41,7 @@ configuration:
 	echo "# Used to automate barracuda-vpn" >> $(zhell_path)
 	echo "alias vpn=\"vpn-open $(key_path)\"" >> $(zhell_path)
 	echo "export PATH=\44PATH:$(PWD)" >> $(zhell_path)
+	echo "# Used to automate barracuda-vpn" >> $(zhell_path)
 
 .PHONY: help # = Generate list of targets with descriptions
 help:
