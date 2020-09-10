@@ -1,0 +1,11 @@
+#!/bin/bash
+export TERM=xterm
+vpn-close
+echo ""
+echo "====> Connecting VPN..."
+USER=$(sudo openssl rsautl -inkey $1 -decrypt < vpn.user)
+PASSWORD=$(sudo openssl rsautl -inkey $1 -decrypt < vpn.pwd)
+CMD="barracudavpn --login $USER --serverpwd $PASSWORD --start"
+$CMD
+vpn-status
+export TERM=xterm-256color
