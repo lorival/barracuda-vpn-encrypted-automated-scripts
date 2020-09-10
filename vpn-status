@@ -1,0 +1,6 @@
+#!/bin/bash
+export TERM=xterm
+echo ""
+echo "====> Getting VPN status..."
+barracudavpn --status 
+export TERM=xterm-256color
