@@ -40,14 +40,9 @@ $ make test
 ````
 > - Replace *value* by your credentials
 > - The root password will be ask to change the owner key to root
+> - The test is just connect and disconnect showing the log
 
-### 3. Test the connection
-````
-$ make test
-````
-> The test is just connect and disconnect showing the log
-
-### 4. Configure the bash
+### 3. Configure the bash
 ````
 $ make configuration
 $ source ~/.zshrc
@@ -73,7 +68,6 @@ $ vpn-close
 ````
 $ make clean
 ````
-> This will remove the credential files and the key
 
 ### 2. Edit bash (~/.zshrc)
 > Remove the lines between the comment: # Used to automate barracuda-vpn
