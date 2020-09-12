@@ -37,12 +37,12 @@ clean:
 	sudo rm $(key_path) || true
 	rmdir --ignore-fail-on-non-empty $(key_directory)
 
-.PHONY: configuration # = Create alias vpn and add this directory to PATH in the shell
-configuration:
+.PHONY: zshell-configuration # = Create alias vpn and add this directory to PATH in the zshell
+zshell-configuration:
 	echo "" >> $(zhell_path)
 	echo "" >> $(zhell_path)
 	echo "# Used to automate barracuda-vpn" >> $(zhell_path)
-	echo "alias vpn=\"vpn-open $(key_path)\"" >> $(zhell_path)
+	echo "alias vpn=\"vpn-open $(key_path) $(credentials_path)\"" >> $(zhell_path)
 	echo "export PATH=\44PATH:$(PWD)" >> $(zhell_path)
 	echo "# Used to automate barracuda-vpn" >> $(zhell_path)
 
