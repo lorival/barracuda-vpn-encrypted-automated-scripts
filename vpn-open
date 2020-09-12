@@ -3,8 +3,9 @@ export TERM=xterm
 vpn-close
 echo ""
 echo "====> Connecting VPN..."
-USER=$(sudo openssl rsautl -inkey $1 -decrypt < vpn.user)
-PASSWORD=$(sudo openssl rsautl -inkey $1 -decrypt < vpn.pwd)
+CREDENTIALS=$(sudo openssl rsautl -inkey $1 -decrypt < $2)
+USER=$(echo $CREDENTIALS | cut -d ":" -f 1)
+PASSWORD=$(echo $CREDENTIALS | cut -d ":" -f 3)
 CMD="barracudavpn --login $USER --serverpwd $PASSWORD --start"
 $CMD
 vpn-status
