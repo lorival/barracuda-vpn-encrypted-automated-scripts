@@ -1,15 +1,15 @@
 barracuda_file = barracudavpn_5.1.4_amd64.deb
-key_directory = ~/.keys
-key_path = $(key_directory)/barracuda-vpn-key_rsa
-user_file_encrypted = vpn.user
-pwd_file_encrypted = vpn.pwd
+key_directory = ~/.barracuda-vpn
+key_path = $(key_directory)/key_rsa
+credentials_path = $(key_directory)/credentials
 zhell_path = ~/.zshrc
 
 .PHONY: install # = Install the barracuda-vpn
 install:
 	sudo dpkg -i $(barracuda_file)
+	./vpn-configure
 
-.PHONY: credentials # = Create key and encrypted files for credentials using the key
+.PHONY: credentials # = Create the credentials file using a new key
 credentials:
 	@ if [ "$(user)" = "" ] || [ "$(pwd)" = "" ]; then \
         echo "Missing parameters! Use 'make test user=value pwd=value'"; \
@@ -17,20 +17,23 @@ credentials:
     fi
 	mkdir -p $(key_directory)
 	openssl genrsa -out $(key_path) 2048
-	echo "$(user)" | openssl rsautl -inkey $(key_path) -encrypt > $(user_file_encrypted)
-	echo "$(pwd)" | openssl rsautl -inkey $(key_path) -encrypt > $(pwd_file_encrypted)
+	echo "$(user)::$(pwd)" | openssl rsautl -inkey $(key_path) -encrypt > $(credentials_path)
 	sudo chown root:root $(key_path)
-	sudo chmod 600 $(key_path)
+	sudo chmod 400 $(key_path)
+	sudo chmod 400 $(credentials_path)
+
+.PHONY: show-credentials # = Decrypt and show the content of the credentials file
+show-credentials:
+	sudo openssl rsautl -inkey $(key_path) -decrypt < $(credentials_path)
 
 .PHONY: test # = Connect to the vpn and close the connection
 test:
-	./vpn-open $(key_path)
+	./vpn-open $(key_path) $(credentials_path)
 	./vpn-close
 
 .PHONY: clean # = Remove the encrypted files for credentials and the key
 clean:
-	sudo rm $(user_file_encrypted) || true
-	sudo rm $(pwd_file_encrypted) || true
+	sudo rm $(credentials_path) || true
 	sudo rm $(key_path) || true
 	rmdir --ignore-fail-on-non-empty $(key_directory)
 
